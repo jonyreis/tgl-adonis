@@ -17,3 +17,4 @@
 const Route = use('Route')
 
 Route.post('register', 'UserController.store')
+Route.post('sessions', 'SessionController.store')
