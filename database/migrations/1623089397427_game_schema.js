@@ -7,7 +7,7 @@ class GameSchema extends Schema {
   up () {
     this.create('games', (table) => {
       table.increments()
-      table.string('type', 80).notNullable().unique()
+      table.text('type', 80).notNullable().unique()
       table.text('description').notNullable()
       table.integer('range')
       table.integer('max_number')
