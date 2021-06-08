@@ -4,6 +4,9 @@
 const Model = use('Model')
 
 class Game extends Model {
+  bet () {
+    return this.belongsTo('App/Models/Bet')
+  }
 }
 
 module.exports = Game
