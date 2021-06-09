@@ -22,6 +22,7 @@ Route.post('register', 'UserController.store').validator('User')
 Route.post('sessions', 'SessionController.store').validator('Session')
 
 Route.post('passwords', 'ForgotPasswordController.store').validator('ForgotPassword')
+Route.put('passwords', 'ForgotPasswordController.update').validator('ResetPassword')
 
 Route.group(() => {
   Route.resource('games', 'GameController')
@@ -34,7 +35,7 @@ Route.group(() => {
         ]
       ]
     ))
-  
+
   Route.get('game/bets', 'BetController.index')
   Route.post('game/bets', 'BetController.store').validator('Bet')
   Route.put('game/bets/:id', 'BetController.update')
