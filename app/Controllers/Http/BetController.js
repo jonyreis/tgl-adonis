@@ -4,6 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
+const Bet = use('App/Models/Bet')
+
 /**
  * Resourceful controller for interacting with bets
  */
@@ -17,19 +19,10 @@ class BetController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
-  }
+  async index () {
+    const bets = await Bet.query().with('game').fetch()
 
-  /**
-   * Render a form to be used for creating a new bet.
-   * GET bets/create
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async create ({ request, response, view }) {
+    return bets
   }
 
   /**
@@ -40,7 +33,14 @@ class BetController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ request }) {
+    const data = request.only(['numbers', 'game_id', 'user_id'])
+    
+    const bets = await Bet.create(data)
+
+    await bets.load('game')
+
+    return bets
   }
 
   /**
@@ -52,19 +52,10 @@ class BetController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async show ({ params, request, response, view }) {
-  }
+  async show ({ params }) {
+    const bets = await Bet.findOrFail(params.id)
 
-  /**
-   * Render a form to update an existing bet.
-   * GET bets/:id/edit
-   *
-   * @param {object} ctx
-   * @param {Request} ctx.request
-   * @param {Response} ctx.response
-   * @param {View} ctx.view
-   */
-  async edit ({ params, request, response, view }) {
+    return bets
   }
 
   /**
@@ -75,7 +66,14 @@ class BetController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async update ({ params, request, response }) {
+  async update ({ params, request }) {
+    const bet = await Bet.findOrFail(params.id)
+    const data = request.only(['numbers'])
+
+    bet.merge(data)
+
+    await bet.save()
+    return bet
   }
 
   /**
@@ -86,7 +84,10 @@ class BetController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async destroy ({ params, request, response }) {
+  async destroy ({ params }) {
+    const bet = await Bet.findOrFail(params.id)
+
+    await bet.delete()
   }
 }
 

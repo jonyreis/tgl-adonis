@@ -41,7 +41,7 @@ class GameController {
         'price', 
         'range', 
         'max_number', 
-        'max_cart_value', 
+        'min_cart_value', 
         'color'
       ]
     )
@@ -83,7 +83,7 @@ class GameController {
         'price', 
         'range', 
         'max_number', 
-        'max_cart_value', 
+        'min_cart_value', 
         'color'
       ]
     )
@@ -92,7 +92,6 @@ class GameController {
 
     await game.save()
     return game
-
   }
 
   /**

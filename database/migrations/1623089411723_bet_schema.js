@@ -22,9 +22,7 @@ class BetSchema extends Schema {
         .inTable('games')
         .onUpdate('CASCADE')
         .onDelete('CASCADE')
-      table.string('type', 80).notNullable().unique()
       table.text('numbers')
-      table.float('price')
       table.timestamps()
     })
   }

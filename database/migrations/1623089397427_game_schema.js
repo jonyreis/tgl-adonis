@@ -11,7 +11,7 @@ class GameSchema extends Schema {
       table.text('description').notNullable()
       table.integer('range')
       table.integer('max_number')
-      table.integer('max_cart_value')
+      table.integer('min_cart_value')
       table.string('color')
       table.float('price')
       table.timestamps()
