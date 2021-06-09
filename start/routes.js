@@ -25,7 +25,16 @@ Route.post('passwords', 'ForgotPasswordController.store')
 Route.put('passwords', 'ForgotPasswordController.update')
 
 Route.group(() => {
-  Route.resource('games', 'GameController').apiOnly()
+  Route.resource('games', 'GameController')
+    .apiOnly()
+    .validator(new Map(
+      [
+        [
+          ['games.store'],
+          ['Game']
+        ]
+      ]
+    ))
   
   Route.get('game/bets', 'BetController.index')
   Route.post('game/bets', 'BetController.store').validator('Bet')
