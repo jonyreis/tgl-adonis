@@ -21,8 +21,7 @@ Route.post('register', 'UserController.store').validator('User')
 
 Route.post('sessions', 'SessionController.store').validator('Session')
 
-Route.post('passwords', 'ForgotPasswordController.store')
-Route.put('passwords', 'ForgotPasswordController.update')
+Route.post('passwords', 'ForgotPasswordController.store').validator('ForgotPassword')
 
 Route.group(() => {
   Route.resource('games', 'GameController')
