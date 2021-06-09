@@ -17,7 +17,7 @@
 const Route = use('Route')
 
 Route.get('register', 'UserController.index')
-Route.post('register', 'UserController.store')
+Route.post('register', 'UserController.store').validator('User')
 
 Route.post('sessions', 'SessionController.store')
 
