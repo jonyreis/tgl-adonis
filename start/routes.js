@@ -28,7 +28,7 @@ Route.group(() => {
   Route.resource('games', 'GameController').apiOnly()
   
   Route.get('game/bets', 'BetController.index')
-  Route.post('game/bets', 'BetController.store')
+  Route.post('game/bets', 'BetController.store').validator('Bet')
   Route.put('game/bets/:id', 'BetController.update')
   Route.delete('game/bets/:id', 'BetController.destroy')
 }).middleware(['auth'])
