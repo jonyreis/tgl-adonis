@@ -5,6 +5,7 @@
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
 const Bet = use('App/Models/Bet')
+const Mail = use('Mail')
 
 /**
  * Resourceful controller for interacting with bets
@@ -20,9 +21,15 @@ class BetController {
    * @param {View} ctx.view
    */
   async index () {
-    const bets = await Bet.query().with('game').fetch()
-
-    return bets
+    try {
+      const bets = await Bet.query().with('game').fetch()
+  
+      return bets
+    } catch (err) {
+      return response
+        .status(400)
+        .send({ error: { message: err.message } })
+    }
   }
 
   /**
@@ -33,14 +40,35 @@ class BetController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request }) {
-    const data = request.only(['numbers', 'game_id', 'user_id'])
-    
-    const bets = await Bet.create(data)
+  async store ({ request, response, auth }) {
+    try {
+      const data = request.only(['numbers', 'game_id', 'user_id'])
 
-    await bets.load('game')
+      const bets = await Bet.create(data)
 
-    return bets
+      await bets.load('user')
+      await bets.load('game')
+      await bets.save()
+
+      await Mail.send(
+        ['emails.bet'],
+        {
+          numbers: data.numbers,
+        },
+        message => {
+          message
+            .to(auth.user.email)
+            .from('jonyreiscardoso@gmail.com', 'Jony Reis')
+            .subject('Nova Aposta')
+        }
+      )
+
+      return bets
+    } catch (err) {
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo não deu certo, ao fazer uma nova aposta'} })
+    }
   }
 
   /**
