@@ -9,7 +9,7 @@ class User {
     return {
       username: 'required|unique:users',
       email: 'required|unique:users',
-      password: 'required|confirmed'
+      password: 'required'
     }
   }
 }
