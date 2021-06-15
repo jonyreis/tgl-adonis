@@ -42,22 +42,27 @@ class BetController {
    */
   async store ({ request, response, auth }) {
     try {
-      const data = request.only(['numbers', 'game_id', 'user_id'])
+      const user = auth.user
+      const data = request.only(['list'])
 
-      const bets = await Bet.create(data)
+      const newData = data.list.map((item) => {
+        return {
+          numbers: item.numbers,
+          game_id: item['game_id'],
+          user_id: user.id
+        }
+      })
 
-      await bets.load('user')
-      await bets.load('game')
-      await bets.save()
+      const bets = await Bet.createMany(newData)
 
       await Mail.send(
         ['emails.bet'],
         {
-          numbers: data.numbers,
+          numbers: newData,
         },
         message => {
           message
-            .to(auth.user.email)
+            .to(user.email)
             .from('jonyreiscardoso@gmail.com', 'Jony Reis')
             .subject('Nova Aposta')
         }
