@@ -20,17 +20,29 @@ class BetController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index () {
+
+  async index({ response, auth }) {
     try {
-      const bets = await Bet.query().with('game').fetch()
-  
-      return bets
+      const user = await auth.user
+
+      if (user.id) {
+        const filteredBetsForUser = await Bet.query().where({
+          'user_id': user.id,
+        })
+        .orderBy('created_at', 'desc')
+        .with('game')
+        .fetch()
+
+        return filteredBetsForUser
+      } else {
+        const bets = await Bet.query().with('game').fetch()
+        return bets
+      }
+
     } catch (err) {
-      return response
-        .status(400)
-        .send({ error: { message: err.message } })
+      return response.status(400).send({ error: { message: err.message } });
     }
-  }
+  } 
 
   /**
    * Create/save a new bet.
