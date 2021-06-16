@@ -19,7 +19,7 @@ class GameController {
    * @param {Response} ctx.response
    * @param {View} ctx.view
    */
-  async index ({ request, response, view }) {
+  async index () {
     const games = await Game.all()
 
     return games

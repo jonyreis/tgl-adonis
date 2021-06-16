@@ -37,6 +37,28 @@ class UserController {
         .send({ error: { message: 'Algo não deu certo, ao fazer o cadastro'} })
     }
   }
+
+  async update ({ auth, request, response }) {
+    try {
+      const { id } = auth.user
+      const user = await User.findOrFail(id)
+      const data = request.only(
+        [
+          'username', 
+          'email', 
+        ]
+      )
+      console.log(data)
+      user.merge(data)
+  
+      await user.save()    
+      return user
+    } catch (err) {
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo não deu certo, ao fazer atualização do seu cadastro'} })
+    }
+  }
 }
 
 module.exports = UserController
