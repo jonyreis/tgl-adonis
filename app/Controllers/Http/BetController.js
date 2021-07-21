@@ -4,8 +4,8 @@
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
 
-const Bet = use('App/Models/Bet')
 const Mail = use('Mail')
+const Bet = use('App/Models/Bet')
 
 /**
  * Resourceful controller for interacting with bets
@@ -69,21 +69,20 @@ class BetController {
 
       await Mail.send(
         ['emails.bet'],
-        {
-          numbers: newData,
-        },
-        message => {
+        { email: user.email },
+        (message) => {
           message
             .to(user.email)
-            .from('jonyreiscardoso@gmail.com', 'Jony Reis')
+            .from('jonyreiscardoso@gmail.com')
             .subject('Nova Aposta')
         }
       )
 
       return bets
     } catch (err) {
+      console.log(err)
       return response
-        .status(err.status)
+        .status(500)
         .send({ error: { message: 'Algo não deu certo, ao fazer uma nova aposta'} })
     }
   }
